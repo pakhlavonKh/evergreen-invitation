@@ -1,19 +1,15 @@
 name = "evergreen-invitation"
 compatibility_date = "2025-09-27"
-type = "javascript"
 
 [build]
 command = "npm run build"
 cwd = "./"
 
-[env.production]
-name = "evergreen-invitation-prod"
-route = "https://invitations.uz/*"
+[build.upload]
+format = "modules"
 
-# Assets configuration for static site hosting
-assets = { directory = "dist" }
+[assets]
+directory = "./dist"
 
-observability = { enabled = true }
-
-[env.staging]
-assets = { directory = "dist" }
+[observability]
+enabled = true
