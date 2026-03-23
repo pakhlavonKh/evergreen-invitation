@@ -15,45 +15,89 @@ const photos = [
 const PhotoGallery = () => {
   const { ref, isVisible } = useScrollReveal();
   const [selected, setSelected] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<number | null>(null);
 
   return (
     <section ref={ref} className="py-24 px-4">
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto text-center">
         <h2
-          className={`font-display text-4xl md:text-5xl italic text-foreground text-center mb-12 transition-all duration-700 ${isVisible ? "animate-fade-up" : "opacity-0"}`}
-          style={{ lineHeight: 1.1 }}
+          className={`font-display text-4xl md:text-5xl italic mb-20 ${
+            isVisible ? "animate-fade-up" : "opacity-0"
+          }`}
         >
           Gallery
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
-          {photos.map((photo, i) => (
-            <button
-              key={i}
-              onClick={() => setSelected(i)}
-              className={`group relative aspect-[3/4] overflow-hidden rounded-lg transition-all duration-700 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${isVisible ? "animate-fade-up" : "opacity-0"}`}
-              style={{ animationDelay: `${200 + i * 100}ms` }}
-            >
-              <img
-                src={photo.src}
-                alt={photo.alt}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-              <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/10 transition-colors duration-300" />
-            </button>
-          ))}
+
+        {/* FAN CONTAINER */}
+        <div className="relative h-[420px] flex items-center justify-center">
+          {photos.map((photo, i) => {
+            const total = photos.length;
+            const middle = (total - 1) / 2;
+
+            // spread control (adjust this ↓)
+            const spreadX = 90; // horizontal spacing
+            const spreadY = 20; // vertical curve
+            const rotateFactor = 10;
+
+            const offsetIndex = i - middle;
+
+            const isActive = hovered === i;
+
+            return (
+              <button
+                key={i}
+                onClick={() => setSelected(i)}
+                onMouseEnter={() => setHovered(i)}
+                onMouseLeave={() => setHovered(null)}
+                className="absolute transition-all duration-500"
+                style={{
+                  zIndex: isActive ? 50 : i,
+
+                  transform: isActive
+                    ? `translateX(0px) translateY(-20px) rotate(0deg) scale(1.08)`
+                    : `
+                      translateX(${offsetIndex * spreadX}px)
+                      translateY(${Math.abs(offsetIndex) * spreadY}px)
+                      rotate(${offsetIndex * rotateFactor}deg)
+                    `,
+                }}
+              >
+                {/* frame */}
+                <div
+                  className="p-2 rounded-xl transition-all duration-300"
+                  style={{
+                    background: isActive ? "white" : "transparent",
+                    boxShadow: isActive
+                      ? "0 25px 50px rgba(0,0,0,0.25)"
+                      : "0 8px 16px rgba(0,0,0,0.15)",
+                  }}
+                >
+                  {/* card */}
+                  <div className="w-[220px] md:w-[260px] aspect-[3/4] rounded-lg overflow-hidden">
+                    <img
+                      src={photo.src}
+                      alt={photo.alt}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              </button>
+            );
+          })}
         </div>
       </div>
 
+      {/* Lightbox */}
       {selected !== null && (
         <div
-          className="fixed inset-0 z-50 bg-foreground/80 flex items-center justify-center p-4 animate-fade-in"
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
           onClick={() => setSelected(null)}
         >
           <img
             src={photos[selected].src}
             alt={photos[selected].alt}
-            className="max-w-full max-h-[85vh] rounded-lg shadow-2xl animate-fade-up"
+            className="max-w-full max-h-[85vh] rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
         </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { CustomSelect } from "./CustomSelect";
 import divider from "@/assets/eucalyptus-divider.png";
 
 const RsvpSection = () => {
@@ -50,29 +51,25 @@ const RsvpSection = () => {
               />
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className="font-body text-xs tracking-[0.15em] uppercase text-muted-foreground mb-1.5 block">Attending?</label>
-                <select
-                  value={form.attending}
-                  onChange={(e) => setForm({ ...form, attending: e.target.value })}
-                  className="w-full border border-border rounded-md px-4 py-2.5 font-body text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
-                >
-                  <option value="yes">Joyfully Accept</option>
-                  <option value="no">Regretfully Decline</option>
-                </select>
-              </div>
-              <div>
-                <label className="font-body text-xs tracking-[0.15em] uppercase text-muted-foreground mb-1.5 block">Number of Guests</label>
-                <select
-                  value={form.guests}
-                  onChange={(e) => setForm({ ...form, guests: e.target.value })}
-                  className="w-full border border-border rounded-md px-4 py-2.5 font-body text-sm bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring transition-shadow"
-                >
-                  {[1, 2, 3, 4].map((n) => (
-                    <option key={n} value={String(n)}>{n}</option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                value={form.attending}
+                onChange={(value) => setForm({ ...form, attending: value })}
+                options={[
+                  { value: "yes", label: "Joyfully Accept" },
+                  { value: "no", label: "Regretfully Decline" },
+                ]}
+                label="Will you attend?"
+                required
+              />
+              <CustomSelect
+                value={form.guests}
+                onChange={(value) => setForm({ ...form, guests: value })}
+                options={[1, 2, 3, 4].map((n) => ({
+                  value: String(n),
+                  label: String(n),
+                }))}
+                label="Number of Guests"
+              />
             </div>
             <div>
               <label className="font-body text-xs tracking-[0.15em] uppercase text-muted-foreground mb-1.5 block">Dietary Requirements</label>
@@ -94,7 +91,7 @@ const RsvpSection = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-primary text-primary-foreground font-body text-sm tracking-[0.15em] uppercase py-3 rounded-md hover:bg-sage-dark transition-colors duration-300 active:scale-[0.98]"
+              className="w-full bg-primary text-primary-foreground font-body font-semibold text-sm tracking-[0.1em] uppercase py-3.5 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-all shadow-sm hover:shadow-md active:shadow-none"
             >
               Send RSVP
             </button>

@@ -1,0 +1,42 @@
+name = "evergreen-invitation"
+compatibility_date = "2025-09-27"
+type = "javascript"
+
+[env.production]
+name = "evergreen-invitation-prod"
+
+[build]
+command = "npm run build"
+cwd = "./"
+watch_paths = ["src/**/*.{ts,tsx,js,jsx}"]
+
+[[build.upload]]
+format = "service-worker"
+
+[build.upload.rules]
+type = "CompiledContentType"
+globs = ["**/*.wasm", "**/*.wasm?module"]
+fallthrough = true
+
+[[build.upload.rules]]
+type = "CompiledContentType"
+globs = ["**/*.wasm?*"]
+fallthrough = true
+
+[[build.upload.rules]]
+type = "Text"
+globs = ["**/*.html"]
+fallthrough = true
+
+[[build.upload.rules]]
+type = "CompiledContentType"
+globs = ["**/*.json"]
+fallthrough = true
+
+# Assets for the static site
+assets = { directory = "dist" }
+
+observability = { enabled = true }
+
+[env.staging]
+assets = { directory = "dist" }
