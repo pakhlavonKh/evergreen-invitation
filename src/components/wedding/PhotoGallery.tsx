@@ -18,10 +18,10 @@ const PhotoGallery = () => {
   const [hovered, setHovered] = useState<number | null>(null);
 
   return (
-    <section ref={ref} className="py-24 px-4">
+    <section ref={ref} className="py-12">
       <div className="max-w-5xl mx-auto text-center">
         <h2
-          className={`font-display text-4xl md:text-5xl italic mb-20 ${
+          className={`font-display text-4xl md:text-5xl italic mb-10 ${
             isVisible ? "animate-fade-up" : "opacity-0"
           }`}
         >
@@ -29,15 +29,18 @@ const PhotoGallery = () => {
         </h2>
 
         {/* FAN CONTAINER */}
-        <div className="relative h-[420px] flex items-center justify-center">
+        <div className="relative h-[420px] flex items-center justify-center max-w-[100vw] md:max-w-lg overflow-x-hidden">
+
+
           {photos.map((photo, i) => {
             const total = photos.length;
             const middle = (total - 1) / 2;
 
-            // spread control (adjust this ↓)
-            const spreadX = 90; // horizontal spacing
-            const spreadY = 20; // vertical curve
-            const rotateFactor = 10;
+            // Responsive spread control
+            const isMobile = window.innerWidth < 768;
+            const spreadX = isMobile ? 55 : 90; // less horizontal spacing on mobile
+            const spreadY = 20;
+            const rotateFactor = isMobile ? 4 : 10; // less rotation on mobile
 
             const offsetIndex = i - middle;
 
